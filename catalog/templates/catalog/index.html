@@ -6,6 +6,10 @@
     <p class="lead">BitStore - крупный онлайн магазин цифровой и бытовой техники</p>
 </div>
 
+<div class="container my-4">
+    <a class="p-2 btn btn-outline-primary" href="{% url 'catalog:product_form' %}">Добавить товар</a>
+</div>
+
 <div class="container">
     <div class="row text-center">
         {% for object in object_list %}
@@ -13,6 +17,16 @@
             <div class="card mb-4 box-shadow">
                 <div class="card-header">
                     <h4 class="my-0 font-weight-normal">{{ object|truncatechars:100 }}</h4>
+
+
+                    {% if object.active_version %}
+                        <p>Активная версия: {{ object.active_version.number_ver }}</p>
+                    {% else %}
+                        <p>Активная версия не установлена</p>
+                    {% endif %}
+
+
+
                 </div>
                 <div class="card-body">
                     <ul class="list-unstyled mt-3 mb-4 text-start m-3">
@@ -21,8 +35,10 @@
                         <li>- Доставка по всей России</li>
                         <li>- Расширенная гарантия</li>
                     </ul>
+
                     <h1 class="card-title pricing-card-title">{{ object.price }} ₽</h1>
                     <a class="btn btn-lg btn-block btn-outline-primary" href="{% url 'catalog:product' object.pk %}">Подробно</a>
+                    <a class="btn btn-lg btn-block btn-outline-primary" href="{% url 'catalog:product_edit' object.pk %}">Изменить</a>
                     <button type="button" class="btn btn-lg btn-block btn-outline-primary">Купить</button>
                 </div>
             </div>
