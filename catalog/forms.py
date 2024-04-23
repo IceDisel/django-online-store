@@ -35,6 +35,10 @@ class ProductForm(StyleFormMixin, forms.ModelForm):
         return cleaned_description
 
 
+class ProductDeleteForm(forms.Form):
+    confirm_delete = forms.BooleanField(label='Подтвердите удаление', required=True)
+
+
 class VersionForm(StyleFormMixin, forms.ModelForm):
     class Meta:
         model = Version
