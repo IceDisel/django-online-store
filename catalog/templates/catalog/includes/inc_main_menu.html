@@ -4,5 +4,23 @@
         <a class="p-2 btn btn-outline-primary" href="{% url 'catalog:index' %}">Каталог</a>
         <a class="p-2 btn btn-outline-primary" href="{% url 'catalog:contacts' %}">Контакты</a>
         <a class="p-2 btn btn-outline-primary" href="{% url 'blog:blogpost_list' %}">Блог</a>
+
+
+        {% if user.is_authenticated %}
+
+            <form action="{% url 'users:logout' %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="p-2 btn btn-outline-primary">Выход</button>
+            </form>
+
+        {% else %}
+
+            <a class="p-2 btn btn-outline-primary" href="{% url 'users:register' %}">Регтстрация</a>
+
+
+            <a class="p-2 btn btn-outline-primary" href="{% url 'users:login' %}">Войти</a>
+
+        {% endif %}
+
     </nav>
 </div>
