@@ -2,12 +2,12 @@ import random
 import string
 
 from django.conf import settings
-from django.contrib.auth.views import PasswordResetView
 from django.core.mail import send_mail
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView
 from django.contrib.auth.hashers import make_password
+from django.http import HttpResponseRedirect
 
 from users.forms import UserRegisterForm
 from users.models import User
@@ -23,7 +23,7 @@ class RegisterView(CreateView):
         return context
 
     def get_success_url(self):
-        return reverse_lazy('catalog:contacts')
+        return reverse_lazy('catalog:index')
 
     def form_valid(self, form):
         user = form.save()
@@ -66,22 +66,20 @@ class ConfirmRegistrationUserView(TemplateView):
         if user:
             user.is_active = True
             user.save()
-            print('------------------------OK')
+
             return redirect('users:login')
         return redirect('catalog:index')
 
 
-class CustomPasswordResetView(PasswordResetView):
+class CustomPasswordResetView(TemplateView):
+    model = User
     template_name = 'users/reset_password.html'
 
-    def get_success_url(self):
-        return reverse_lazy('catalog:index')
-
-    def form_valid(self, form):
+    def post(self, request, *args, **kwargs):
+        email = request.POST.get('email')
+        user = User.objects.get(email=email)
 
         new_password = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
-
-        user = User.objects.get(email=form.cleaned_data['email'])
         user.password = make_password(new_password)
         user.save()
 
@@ -89,7 +87,12 @@ class CustomPasswordResetView(PasswordResetView):
             subject='Восстановление пароля',
             message='Ваш новый пароль: {}'.format(new_password),
             from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[form.cleaned_data['email']],
+            recipient_list=[user.email],
             fail_silently=False,
         )
-        return super().form_valid(form)
+
+        return HttpResponseRedirect('confirm/')
+
+
+class PasswordRecoveryMessageView(TemplateView):
+    template_name = 'users/password_recovery_message.html'
