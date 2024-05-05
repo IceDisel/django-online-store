@@ -20,11 +20,10 @@
 
 
                     {% if object.active_version %}
-                        <p>Активная версия: {{ object.active_version.number_ver }}</p>
+                    <p>Активная версия: {{ object.active_version.number_ver }}</p>
                     {% else %}
-                        <p>Активная версия не установлена</p>
+                    <p>Активная версия не установлена</p>
                     {% endif %}
-
 
 
                 </div>
@@ -38,8 +37,12 @@
 
                     <h1 class="card-title pricing-card-title">{{ object.price }} ₽</h1>
                     <a class="btn btn-lg btn-block btn-outline-primary" href="{% url 'catalog:product' object.pk %}">Подробно</a>
-                    <a class="btn btn-lg btn-block btn-outline-primary" href="{% url 'catalog:product_edit' object.pk %}">Изменить</a>
-                    <a class="btn btn-lg btn-block btn-outline-primary my-2" href="{% url 'catalog:product_delete' object.pk %}">Удалить</a>
+                    {% if perms.catalog.can_edit_description and perms.catalog.can_edit_category and perms.catalog.set_published_status or user == object.owner %}
+                    <a class="btn btn-lg btn-block btn-outline-primary"
+                       href="{% url 'catalog:product_edit' object.pk %}">Изменить</a>
+                    {% endif %}
+                    <a class="btn btn-lg btn-block btn-outline-primary my-2"
+                       href="{% url 'catalog:product_delete' object.pk %}">Удалить</a>
                     <button type="button" class="btn btn-lg btn-block btn-outline-primary my-2">Купить</button>
                 </div>
             </div>
