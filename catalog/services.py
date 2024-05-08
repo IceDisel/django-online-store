@@ -24,13 +24,14 @@ def get_category_products_from_cache(pk):
     if not CACHE_ENABLED:
         return Product.objects.filter(category=pk)
 
-    key = 'category_products'
-    cache_data = cache.get(key)
+    key_products = f'category_products_{pk}'
+
+    cache_data = cache.get(key_products)
 
     if cache_data is not None:
         return cache_data
 
     cache_data = Product.objects.filter(category=pk)
-    cache.set(key, cache_data)
+    cache.set(key_products, cache_data)
 
     return cache_data
