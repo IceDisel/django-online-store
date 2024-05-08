@@ -1,0 +1,28 @@
+{% extends 'catalog/base.html' %}
+{% block content %}
+
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-4">BitStore</h1>
+    <p class="lead">BitStore - крупный онлайн магазин цифровой и бытовой техники</p>
+</div>
+
+<div class="container">
+
+    <div class="row">
+        {% for object in object_list %}
+        <div class="col-3">
+            <div class="card text-center">
+                <div class="card-header">
+                    <h3>{{object.name}}</h3>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">{{object.description|slice:":200" }}</p>
+                    <a href="{% url 'catalog:category' object.pk %}" class="btn btn-primary">Подробнее</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
