@@ -1,0 +1,53 @@
+{% extends 'catalog/base.html' %}
+{% block content %}
+
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-4">BitStore</h1>
+    <p class="lead">BitStore - крупный онлайн магазин цифровой и бытовой техники</p>
+</div>
+
+<div class="container my-4">
+    <a class="p-2 btn btn-outline-primary" href="{% url 'catalog:product_form' %}">Добавить товар</a>
+</div>
+
+<div class="container">
+    <div class="row text-center">
+        {% for object in object_list %}
+        <div class="col-3">
+            <div class="card mb-4 box-shadow">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">{{ object|truncatechars:100 }}</h4>
+
+
+                    {% if object.active_version %}
+                    <p>Активная версия: {{ object.active_version.number_ver }}</p>
+                    {% else %}
+                    <p>Активная версия не установлена</p>
+                    {% endif %}
+
+
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+                        <li>- Доступен кредит</li>
+                        <li>- Доступна расрочка</li>
+                        <li>- Доставка по всей России</li>
+                        <li>- Расширенная гарантия</li>
+                    </ul>
+
+                    <h1 class="card-title pricing-card-title">{{ object.price }} ₽</h1>
+                    <a class="btn btn-lg btn-block btn-outline-primary" href="{% url 'catalog:product' object.pk %}">Подробно</a>
+                    {% if perms.catalog.can_edit_description and perms.catalog.can_edit_category and perms.catalog.set_published_status or user == object.owner %}
+                    <a class="btn btn-lg btn-block btn-outline-primary"
+                       href="{% url 'catalog:product_edit' object.pk %}">Изменить</a>
+                    {% endif %}
+                    <a class="btn btn-lg btn-block btn-outline-primary my-2"
+                       href="{% url 'catalog:product_delete' object.pk %}">Удалить</a>
+                    <button type="button" class="btn btn-lg btn-block btn-outline-primary my-2">Купить</button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

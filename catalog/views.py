@@ -6,7 +6,8 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from catalog.forms import ProductForm, VersionForm, ProductDeleteForm, ProductModeratorForm
-from catalog.models import Product, Version
+from catalog.models import Product, Version, Category
+from catalog.services import get_categories_from_cache, get_category_products_from_cache
 
 
 class ProductListView(LoginRequiredMixin, ListView):
@@ -99,3 +100,23 @@ class VersionCreateView(LoginRequiredMixin, CreateView):
     model = Version
     form_class = VersionForm
     success_url = reverse_lazy('catalog:index')
+
+
+class CategoriesListView(LoginRequiredMixin, ListView):
+    model = Category
+    template_name = 'catalog/category_list.html'
+
+    def get_queryset(self):
+        return get_categories_from_cache()
+
+
+class CategoriesDetailView(LoginRequiredMixin, DetailView):
+    model = Category
+    template_name = 'catalog/category_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'BitStore - Товар'
+        context['object_list'] = get_category_products_from_cache(self.kwargs.get('pk'))
+
+        return context
