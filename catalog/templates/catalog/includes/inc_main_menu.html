@@ -2,6 +2,7 @@
     <h5 class="my-0 mr-md-auto font-weight-normal">BitStore</h5>
     <nav class="ms-5">
         <a class="p-2 btn btn-outline-primary" href="{% url 'catalog:index' %}">Каталог</a>
+        <a class="p-2 btn btn-outline-primary" href="{% url 'catalog:categories_list' %}">Категории</a>
         <a class="p-2 btn btn-outline-primary" href="{% url 'catalog:contacts' %}">Контакты</a>
         <a class="p-2 btn btn-outline-primary" href="{% url 'blog:blogpost_list' %}">Блог</a>
 
@@ -16,8 +17,6 @@
         {% else %}
 
             <a class="p-2 btn btn-outline-primary" href="{% url 'users:register' %}">Регтстрация</a>
-
-
             <a class="p-2 btn btn-outline-primary" href="{% url 'users:login' %}">Войти</a>
 
         {% endif %}
